@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace LeetCodeDaily
 {
@@ -12,7 +13,7 @@ namespace LeetCodeDaily
             var sol = new Solution();
             int[][] a = [[0, 6, 0], [5, 8, 7], [0, 9, 0]];
             Console.WriteLine(sol.GetMaximumGold(a));
-            int[][] b = [[1, 0, 7], [2, 0, 6], [3, 4, 5], [0, 3, 0], [9, 0, 20]];
+            int[][] b = [[1, 0, 7, 0, 0, 0], [2, 0, 6, 0, 1, 0], [3, 5, 6, 7, 4, 2], [4, 3, 1, 0, 2, 0], [3, 0, 5, 0, 20, 0]];
             Console.WriteLine(sol.GetMaximumGold(b));
         }
         public class Solution
@@ -21,39 +22,30 @@ namespace LeetCodeDaily
             {
                 int m = grid.Length;
                 int n = grid[0].Length;
-
-                var maximums = new int[m][];
-                for (int i = 0; i < m; i++) maximums[i] = new int[n];
-                HashSet<(int, int)> visited = new();
+                int max = 0;
 
                 for (int i = 0; i < m; i++)
                     for (int j = 0; j < n; j++)
                         if (grid[i][j] != 0)
-                        {
-                            maximums[i][j] = DFS(grid, i, j, 0);
-                            visited.Clear();
-                        }
-
-                int max = 0;
-                for (int i = 0; i < m; i++)
-                    for(int j  = 0; j < n; j++)
-                        max = Math.Max(max, maximums[i][j]);
+                            max = Math.Max(max, DFS(i, j));
 
                 return max;
 
-                int DFS(int[][] grid, int i, int j, int sum)
+                int DFS(int i, int j)
                 {
-                    if (visited.Contains((i, j)) || i < 0 || j < 0 || i > m - 1 || j > n - 1)
-                    {
-                        return sum;
-                    }
-                    visited.Add((i, j));
-                    sum += grid[i][j];
-                    sum = Math.Max(sum, DFS(grid, i - 1, j, sum));
-                    sum = Math.Max(sum, DFS(grid, i + 1, j, sum));
-                    sum = Math.Max(sum, DFS(grid, i, j - 1, sum));
-                    sum = Math.Max(sum, DFS(grid, i, j + 1, sum));
+                    if (i < 0 || j < 0 || i == m || j == n || grid[i][j] == 0) 
+                        return 0;
 
+                    int cur = grid[i][j];
+                    grid[i][j] = 0;
+
+                    int sum = cur + 
+                        Math.Max(DFS(i - 1, j), 
+                        Math.Max(DFS(i + 1, j), 
+                        Math.Max(DFS(i, j - 1), 
+                        DFS(i, j + 1))));
+
+                    grid[i][j] = cur;
                     return sum;
                 }
             }
