@@ -7,51 +7,88 @@ namespace LeetCodeDaily
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            
+            var sol = new Solution();
+            int[][] a = [[0, 6, 0], [5, 8, 7], [0, 9, 0]];
+            Console.WriteLine(sol.GetMaximumGold(a));
+            int[][] b = [[1, 0, 7], [2, 0, 6], [3, 4, 5], [0, 3, 0], [9, 0, 20]];
+            Console.WriteLine(sol.GetMaximumGold(b));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int GetMaximumGold(int[][] grid)
             {
-                return null;
+                int m = grid.Length;
+                int n = grid[0].Length;
+                List<int> sums = [];
+                Queue<Path> q = new();
+
+                for (int i = 0; i < m; i++)
+                    for (int j = 0; j < n; j++)
+                        if (grid[i][j] != 0)
+                            q.Enqueue(new Path(j, i, grid[i][j]));
+
+                while (q.Count > 0)
+                {
+                    int size = q.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        var cur = q.Dequeue();
+
+                        if (cur.y > 0 && grid[cur.y - 1][cur.x] != 0 && !cur.visited.Contains((cur.x, cur.y - 1)))
+                        {
+                            cur.sum += grid[cur.y - 1][cur.x];
+                            cur.visited.Add((cur.x, cur.y - 1));
+                            q.Enqueue(new Path(cur.x, cur.y, cur.sum, cur.visited));
+                        }
+                        else if (cur.y < m - 1 && grid[cur.y + 1][cur.x] != 0 && !cur.visited.Contains((cur.x, cur.y + 1)))
+                        {
+                            cur.sum += grid[cur.y + 1][cur.x];
+                            cur.visited.Add((cur.x, cur.y + 1));
+                            q.Enqueue(new Path(cur.x, cur.y, cur.sum, cur.visited));
+                        }
+                        else if (cur.x > 0 && grid[cur.y][cur.x - 1] != 0 && !cur.visited.Contains((cur.x - 1, cur.y)))
+                        {
+                            cur.sum += grid[cur.y][cur.x - 1];
+                            cur.visited.Add((cur.x - 1, cur.y));
+                            q.Enqueue(new Path(cur.x, cur.y, cur.sum, cur.visited));
+                        }
+                        else if(cur.x < n - 1 && grid[cur.y][cur.x + 1] != 0 && !cur.visited.Contains((cur.x + 1, cur.y)))
+                        {
+                            cur.sum += grid[cur.y][cur.x + 1];
+                            cur.visited.Add((cur.x + 1, cur.y));
+                            q.Enqueue(new Path(cur.x, cur.y, cur.sum, cur.visited));
+                        }
+                        else {sums.Add(cur.sum); }
+                    }
+                }
+
+                return sums.Max();
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
+
+            public class Path
+            {
+                public int sum = 0;
+                public int x;
+                public int y;
+                public HashSet<(int, int)> visited = [];
+
+                public Path(int j, int i, int val)
+                {
+                    sum = val;
+                    x = j;
+                    y = i;
+                    visited.Add((i, j));
+                }
+                public Path(int j, int i, int val, HashSet<(int, int)> vis)
+                {
+                    sum = val;
+                    x = j;
+                    y = i;
+                    visited = vis;
+                }
+            }
         }
     }
 }
