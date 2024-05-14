@@ -21,72 +21,40 @@ namespace LeetCodeDaily
             {
                 int m = grid.Length;
                 int n = grid[0].Length;
-                List<int> sums = [];
-                Queue<Path> q = new();
+
+                var maximums = new int[m][];
+                for (int i = 0; i < m; i++) maximums[i] = new int[n];
+                HashSet<(int, int)> visited = new();
 
                 for (int i = 0; i < m; i++)
                     for (int j = 0; j < n; j++)
                         if (grid[i][j] != 0)
-                            q.Enqueue(new Path(j, i, grid[i][j]));
+                        {
+                            maximums[i][j] = DFS(grid, i, j, 0);
+                            visited.Clear();
+                        }
 
-                while (q.Count > 0)
+                int max = 0;
+                for (int i = 0; i < m; i++)
+                    for(int j  = 0; j < n; j++)
+                        max = Math.Max(max, maximums[i][j]);
+
+                return max;
+
+                int DFS(int[][] grid, int i, int j, int sum)
                 {
-                    int size = q.Count;
-                    for (int i = 0; i < size; i++)
+                    if (visited.Contains((i, j)) || i < 0 || j < 0 || i > m - 1 || j > n - 1)
                     {
-                        var cur = q.Dequeue();
-
-                        if (cur.y > 0 && grid[cur.y - 1][cur.x] != 0 && !cur.visited.Contains((cur.x, cur.y - 1)))
-                        {
-                            cur.visited.Add((cur.x, cur.y - 1));
-                            q.Enqueue(new Path(cur.x, cur.y, cur.sum + grid[cur.y - 1][cur.x], cur.visited));
-                        }
-                        if (cur.y < m - 1 && grid[cur.y + 1][cur.x] != 0 && !cur.visited.Contains((cur.x, cur.y + 1)))
-                        {
-                            cur.visited.Add((cur.x, cur.y + 1));
-                            q.Enqueue(new Path(cur.x, cur.y, cur.sum + grid[cur.y + 1][cur.x], cur.visited));
-                        }
-                        if (cur.x > 0 && grid[cur.y][cur.x - 1] != 0 && !cur.visited.Contains((cur.x - 1, cur.y)))
-                        {
-                            cur.visited.Add((cur.x - 1, cur.y));
-                            q.Enqueue(new Path(cur.x, cur.y, cur.sum + grid[cur.y][cur.x - 1], cur.visited));
-                        }
-                        if (cur.x < n - 1 && grid[cur.y][cur.x + 1] != 0 && !cur.visited.Contains((cur.x + 1, cur.y)))
-                        {
-                            cur.visited.Add((cur.x + 1, cur.y));
-                            q.Enqueue(new Path(cur.x, cur.y, cur.sum + grid[cur.y][cur.x + 1], cur.visited));
-                        }
-                        else { sums.Add(cur.sum); }
+                        return sum;
                     }
-                }
-
-                return sums.Max();
-            }
-
-            public class Path
-            {
-                public int sum = 0;
-                public int x;
-                public int y;
-                public HashSet<(int, int)> visited = [];
-
-                public Path(int j, int i, int val)
-                {
-                    sum = val;
-                    x = j;
-                    y = i;
                     visited.Add((i, j));
-                }
-                public Path(int j, int i, int val, HashSet<(int, int)> vis)
-                {
-                    sum = val;
-                    x = j;
-                    y = i;
-                    visited = vis;
-                }
-                public override string ToString()
-                {
-                    return $"sum = {sum} ({y},{x})";
+                    sum += grid[i][j];
+                    sum = Math.Max(sum, DFS(grid, i - 1, j, sum));
+                    sum = Math.Max(sum, DFS(grid, i + 1, j, sum));
+                    sum = Math.Max(sum, DFS(grid, i, j - 1, sum));
+                    sum = Math.Max(sum, DFS(grid, i, j + 1, sum));
+
+                    return sum;
                 }
             }
         }
