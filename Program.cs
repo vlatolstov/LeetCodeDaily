@@ -38,29 +38,25 @@ namespace LeetCodeDaily
 
                         if (cur.y > 0 && grid[cur.y - 1][cur.x] != 0 && !cur.visited.Contains((cur.x, cur.y - 1)))
                         {
-                            cur.sum += grid[cur.y - 1][cur.x];
                             cur.visited.Add((cur.x, cur.y - 1));
-                            q.Enqueue(new Path(cur.x, cur.y, cur.sum, cur.visited));
+                            q.Enqueue(new Path(cur.x, cur.y, cur.sum + grid[cur.y - 1][cur.x], cur.visited));
                         }
-                        else if (cur.y < m - 1 && grid[cur.y + 1][cur.x] != 0 && !cur.visited.Contains((cur.x, cur.y + 1)))
+                        if (cur.y < m - 1 && grid[cur.y + 1][cur.x] != 0 && !cur.visited.Contains((cur.x, cur.y + 1)))
                         {
-                            cur.sum += grid[cur.y + 1][cur.x];
                             cur.visited.Add((cur.x, cur.y + 1));
-                            q.Enqueue(new Path(cur.x, cur.y, cur.sum, cur.visited));
+                            q.Enqueue(new Path(cur.x, cur.y, cur.sum + grid[cur.y + 1][cur.x], cur.visited));
                         }
-                        else if (cur.x > 0 && grid[cur.y][cur.x - 1] != 0 && !cur.visited.Contains((cur.x - 1, cur.y)))
+                        if (cur.x > 0 && grid[cur.y][cur.x - 1] != 0 && !cur.visited.Contains((cur.x - 1, cur.y)))
                         {
-                            cur.sum += grid[cur.y][cur.x - 1];
                             cur.visited.Add((cur.x - 1, cur.y));
-                            q.Enqueue(new Path(cur.x, cur.y, cur.sum, cur.visited));
+                            q.Enqueue(new Path(cur.x, cur.y, cur.sum + grid[cur.y][cur.x - 1], cur.visited));
                         }
-                        else if(cur.x < n - 1 && grid[cur.y][cur.x + 1] != 0 && !cur.visited.Contains((cur.x + 1, cur.y)))
+                        if (cur.x < n - 1 && grid[cur.y][cur.x + 1] != 0 && !cur.visited.Contains((cur.x + 1, cur.y)))
                         {
-                            cur.sum += grid[cur.y][cur.x + 1];
                             cur.visited.Add((cur.x + 1, cur.y));
-                            q.Enqueue(new Path(cur.x, cur.y, cur.sum, cur.visited));
+                            q.Enqueue(new Path(cur.x, cur.y, cur.sum + grid[cur.y][cur.x + 1], cur.visited));
                         }
-                        else {sums.Add(cur.sum); }
+                        else { sums.Add(cur.sum); }
                     }
                 }
 
@@ -87,6 +83,10 @@ namespace LeetCodeDaily
                     x = j;
                     y = i;
                     visited = vis;
+                }
+                public override string ToString()
+                {
+                    return $"sum = {sum} ({y},{x})";
                 }
             }
         }
