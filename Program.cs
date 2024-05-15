@@ -22,41 +22,25 @@ namespace LeetCodeDaily
             public int[] TopKFrequent(int[] nums, int k)
             {
                 if (nums.Length == 1) return nums;
-                BucketSort(nums, 10);
 
                 Dictionary<int, int> counts = new();
-
                 for (int i = 0; i < nums.Length; i++)
                 {
                     if (!counts.ContainsKey(nums[i])) counts.Add(nums[i], 1);
                     else counts[nums[i]]++;
                 }
 
-                return counts.OrderByDescending(x => x.Value).Take(k).Select(x => x.Key).ToArray();
+                PriorityQueue<int, int> pq = new(Comparer<int>.Create((a,b) => a.CompareTo(b)));
 
-                void BucketSort(int[] arr, int K)
+                foreach (var kvp in counts)
                 {
-                    List<List<int>> buckets = new();
-                    for (int i = 0; i < K; i++) buckets.Add([]);
-                    int offset = arr.Min();
-                    int max = arr.Max() - offset;
-                    double size = (double)(max / K);
-                    if (size < 1d) size = 1d;
-
-                    foreach (int i in arr)
-                    {
-                        int index = (int)((i - offset) / size);
-                        if (index == K) buckets[K - 1].Add(i);
-                        else buckets[index].Add(i);
-                    }
-
-                    foreach (var bucket in buckets) bucket.Sort();
-
-                    List<int> sorted = [];
-                    foreach (var bucket in buckets) sorted.AddRange(bucket);
-
-                    for (int i = 0; i < arr.Length; i++) arr[i] = sorted[i];
+                    pq.Enqueue(kvp.Key, kvp.Value);
+                    if (pq.Count > k) pq.Dequeue();
                 }
+
+                int[] res = [k];
+                for (int i = 0; i < res.Length; i++) res[i] = pq.Dequeue();
+                return res;
             }
         }
     }
