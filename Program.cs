@@ -9,13 +9,19 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-
+            var sol = new Solution();
+            List<IList<int>> a = [[1, 0, 0], [0, 0, 0], [0, 0, 1]];
+            List<IList<int>> b = [[0, 0, 1], [0, 0, 0], [0, 0, 0]];
+            List<IList<int>> c = [[0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [1, 0, 0, 0]];
+            Console.WriteLine(sol.MaximumSafenessFactor(a));
+            Console.WriteLine(sol.MaximumSafenessFactor(b));
+            Console.WriteLine(sol.MaximumSafenessFactor(c));
         }
         public class Solution
         {
             public int MaximumSafenessFactor(IList<IList<int>> grid)
             {
-                int[][] dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+                int[][] dir = [[0, 1], [1, 0], [0, -1], [-1, 0]];
                 int n = grid.Count;
                 Queue<(int, int)> q = [];
 
@@ -43,7 +49,7 @@ namespace LeetCodeDaily
                             int dr = cur.Item1 + d[0];
                             int dc = cur.Item2 + d[1];
                             int val = grid[cur.Item1][cur.Item2];
-                            if ((dr > 0 || dc > 0 || dr < n || dc < n) && grid[dr][dc] == -1)
+                            if ((dr >= 0 && dc >= 0 && dr < n && dc < n) && grid[dr][dc] == -1)
                             {
                                 grid[dr][dc] = val + 1;
                                 q.Enqueue((dr, dc));
@@ -65,9 +71,10 @@ namespace LeetCodeDaily
                     {
                         int dr = cur.Item1 + d[0];
                         int dc = cur.Item2 + d[1];
-                        if ((dr > 0 || dc > 0 || dr < n || dc < n) && grid[dr][dc] != -1)
+                        if ((dr >= 0 && dc >= 0 && dr < n && dc < n) && grid[dr][dc] != -1)
                         {
-                            priorityQueue.Enqueue((dr, dc, grid[dr][dc]), -Math.Min(cur.Item3, grid[dr][dc]));
+                            int priority = Math.Min(cur.Item3, grid[dr][dc]);
+                            priorityQueue.Enqueue((dr, dc, priority), -priority);
                             grid[dr][dc] = -1;
                         }
                     }
