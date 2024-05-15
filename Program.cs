@@ -9,49 +9,72 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int MaximumSafenessFactor(IList<IList<int>> grid)
             {
-                return null;
+                int[][] dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+                int n = grid.Count;
+                Queue<(int, int)> q = [];
+
+                for (int r = 0; r < n; r++)
+                {
+                    for (int c = 0; c < n; c++)
+                    {
+                        if (grid[r][c] == 1)
+                        {
+                            q.Enqueue((r, c));
+                            grid[r][c] = 0;
+                        }
+                        else { grid[r][c] = -1; }
+                    }
+                }
+
+                while (q.Count > 0)
+                {
+                    int size = q.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        var cur = q.Dequeue();
+                        foreach (var d in dir)
+                        {
+                            int dr = cur.Item1 + d[0];
+                            int dc = cur.Item2 + d[1];
+                            int val = grid[cur.Item1][cur.Item2];
+                            if ((dr > 0 || dc > 0 || dr < n || dc < n) && grid[dr][dc] == -1)
+                            {
+                                grid[dr][dc] = val + 1;
+                                q.Enqueue((dr, dc));
+                            }
+                        }
+                    }
+                }
+
+                PriorityQueue<(int, int, int), int> priorityQueue = new();
+                priorityQueue.Enqueue((0, 0, grid[0][0]), -grid[0][0]);
+                grid[0][0] = -1;
+
+                while (priorityQueue.Count > 0)
+                {
+                    var cur = priorityQueue.Dequeue();
+                    if (cur.Item1 == n - 1 && cur.Item2 == n - 1) return cur.Item3;
+
+                    foreach (var d in dir)
+                    {
+                        int dr = cur.Item1 + d[0];
+                        int dc = cur.Item2 + d[1];
+                        if ((dr > 0 || dc > 0 || dr < n || dc < n) && grid[dr][dc] != -1)
+                        {
+                            priorityQueue.Enqueue((dr, dc, grid[dr][dc]), -Math.Min(cur.Item3, grid[dr][dc]));
+                            grid[dr][dc] = -1;
+                        }
+                    }
+                }
+
+                return -1;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
