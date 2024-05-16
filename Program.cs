@@ -23,19 +23,24 @@ namespace LeetCodeDaily
             {
                 if (nums.Length == 1) return true;
                 if (nums[0] == 0) return false;
-                int gap = 0;
 
+                bool res = false;
+                int gap = 0;
                 for (int i = nums.Length - 2; i >= 0; i--)
                 {
-                    gap++;
                     int cur = nums[i];
+                    gap++;
                     if (cur != 0)
                     {
-                        if (cur < gap) return false;
-                        gap = 0;
+                        if (cur < gap) res = false;
+                        else
+                        {
+                            gap = 0;
+                            res = true;
+                        }
                     }
                 }
-                return true;
+                return res;
             }
         }
     }
