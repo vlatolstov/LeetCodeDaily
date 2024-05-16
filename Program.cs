@@ -9,12 +9,21 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+
         }
         public class Solution
         {
-
-
+            public bool EvaluateTree(TreeNode root)
+            {
+                return root.val switch
+                {
+                    0 => false,
+                    1 => true,
+                    2 => EvaluateTree(root.left) || EvaluateTree(root.right),
+                    3 => EvaluateTree(root.left) && EvaluateTree(root.right),
+                    _ => false,
+                };
+            }
         }
     }
 
@@ -42,16 +51,6 @@ namespace LeetCodeDaily
             node.right = CreateTree(values, 2 * index + 2);
             node.val = (int)values[index];
             return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
