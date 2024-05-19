@@ -24,28 +24,25 @@ namespace LeetCodeDaily
         {
             public long MaximumValueSum(int[] nums, int k, int[][] edges)
             {
-                bool changed;
-                do
+                List<(int, int)> benefit = [];
+                (int, int) minimal = (int.MaxValue, 0);
+                for (int i = 0; i < nums.Length; i++)
                 {
-                    changed = false;
-                    foreach (var edge in edges)
+                    int a = nums[i];
+                    int b = nums[i] ^ k;
+                    if (b > a)
                     {
-                        int u = nums[edge[0]];
-                        int v = nums[edge[1]];
-                        long curSum = u + v;
-                        long newSum = u ^ k + v ^ k;
-                        if (curSum < newSum)
-                        {
-                            nums[edge[0]] = u ^ k;
-                            nums[edge[1]] = v ^ k;
-                            changed = true;
-                        }
+                        benefit.Add((b, i));
+                        bool change = minimal.Item1 > b;
+                        if (change) minimal = (b, i);
                     }
-                } while (changed);
+                }
+                if (benefit.Count % 2 == 1) benefit.Remove(minimal);
 
-                long res = 0;
-                foreach (int elem in nums) res += elem;
-                return res;
+                foreach (var change in benefit) nums[change.Item2] = change.Item1;
+                long sum = 0;
+                foreach (int elem in nums) sum += elem;
+                return sum;
             }
         }
     }
