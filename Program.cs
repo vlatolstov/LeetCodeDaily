@@ -24,22 +24,34 @@ namespace LeetCodeDaily
         {
             public long MaximumValueSum(int[] nums, int k, int[][] edges)
             {
-                List<(int, int)> benefit = [];
-                (int, int) minimal = (int.MaxValue, 0);
+                List<(int, int, int)> benefit = [];
+                (int, int, int) minBenefit = (int.MaxValue, 0, 0);
+                (int, int, int) maxBenefit = (0, 0, 0);
+                (int, int, int) minDecrease = (0, 0, int.MinValue);
+
                 for (int i = 0; i < nums.Length; i++)
                 {
-                    int a = nums[i];
-                    int b = nums[i] ^ k;
-                    if (b > a)
+                    int x = nums[i];
+                    int XOR = nums[i] ^ k;
+                    int diff = XOR - x;
+                    var cur = (XOR, i, diff);
+                    if (diff > 0)
                     {
-                        benefit.Add((b, i));
-                        bool change = minimal.Item1 > b;
-                        if (change) minimal = (b, i);
+                        benefit.Add(cur);
+                        minBenefit = minBenefit.Item1 < cur.XOR ? minBenefit : cur;
+                        maxBenefit = maxBenefit.Item1 < cur.XOR ? cur : maxBenefit;
                     }
+                    if (diff <= 0) minDecrease = minDecrease.Item3 > cur.diff ? minDecrease : cur;
                 }
-                if (benefit.Count % 2 == 1) benefit.Remove(minimal);
+
+                if (benefit.Count % 2 == 1)
+                {
+                    if (maxBenefit.Item3 > Math.Abs(minDecrease.Item3)) benefit.Add(minDecrease);
+                    else benefit.Remove(minBenefit);
+                }
 
                 foreach (var change in benefit) nums[change.Item2] = change.Item1;
+
                 long sum = 0;
                 foreach (int elem in nums) sum += elem;
                 return sum;
