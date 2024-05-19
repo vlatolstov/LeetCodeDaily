@@ -9,49 +9,44 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            var sol = new Solution();
+
+            int[] nums1 = [1, 2, 1]; int[][] edges1 = [[0, 1], [0, 2]]; int k1 = 3;
+            int[] nums2 = [2, 3]; int[][] edges2 = [[0, 1]]; int k2 = 7;
+            int[] nums3 = [7, 7, 7, 7, 7, 7]; int[][] edges3 = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5]]; int k3 = 3;
+            int[] nums4 = [24, 78, 1, 97, 44]; int[][] edges4 = [[0, 2], [1, 2], [4, 2], [3, 4]]; int k4 = 6;
+            Console.WriteLine(sol.MaximumValueSum(nums1, k1, edges1));
+            Console.WriteLine(sol.MaximumValueSum(nums2, k2, edges2));
+            Console.WriteLine(sol.MaximumValueSum(nums3, k3, edges3));
+            Console.WriteLine(sol.MaximumValueSum(nums4, k4, edges4));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public long MaximumValueSum(int[] nums, int k, int[][] edges)
             {
-                return null;
+                bool changed;
+                do
+                {
+                    changed = false;
+                    foreach (var edge in edges)
+                    {
+                        int u = nums[edge[0]];
+                        int v = nums[edge[1]];
+                        long curSum = u + v;
+                        long newSum = u ^ k + v ^ k;
+                        if (curSum < newSum)
+                        {
+                            nums[edge[0]] = u ^ k;
+                            nums[edge[1]] = v ^ k;
+                            changed = true;
+                        }
+                    }
+                } while (changed);
+
+                long res = 0;
+                foreach (int elem in nums) res += elem;
+                return res;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
