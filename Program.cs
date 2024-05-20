@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.Xml.XPath;
 
 namespace LeetCodeDaily
 {
@@ -9,49 +10,30 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            var sol = new Solution();
+
+            int[] a = [1, 3];
+            Console.WriteLine(sol.SubsetXORSum(a));
+
+            int[] b = [5, 1, 6];
+            Console.WriteLine(sol.SubsetXORSum(b));
+
+            int[] c = [3, 4, 5, 6, 7, 8];
+            Console.WriteLine(sol.SubsetXORSum(c));
+
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int SubsetXORSum(int[] nums)
             {
-                return null;
+                return Recursion(0, 0);
+
+                int Recursion(int sum, int i)
+                {
+                    if (i == nums.Length) return sum;
+                    return Recursion(sum, i + 1) + Recursion(sum ^ nums[i], i + 1);
+                }
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
