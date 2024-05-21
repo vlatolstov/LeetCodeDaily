@@ -17,32 +17,27 @@ namespace LeetCodeDaily
         {
             public IList<IList<int>> Subsets(int[] nums)
             {
-                Queue<(IList<int>, int)> q = [];
-                HashSet<IList<int>> res = [];
-                q.Enqueue((nums.ToList(), 0));
-                
-                while (q.Count > 0)
+                Queue<IList<int>> q = [];
+                q.Enqueue([]);
+                int index = 0;
+
+                while (q.Count > 0 && index < nums.Length)
                 {
                     int n = q.Count;
                     for (int i = 0; i < n; i++)
                     {
                         var cur = q.Dequeue();
-                        var subset = cur.Item1;
-                        var index = cur.Item2;
-                        res.Add(subset);
-                        if (index < subset.Count)
-                        {
-                            IList<int> newSubset = [];
-                            for (int j = 0; j < subset.Count; j++)
-                            {
-                                if (j != index) newSubset.Add(subset[j]);
-                            }
-                            q.Enqueue((subset, index + 1));
-                            q.Enqueue((newSubset, 0));
-                        }
+                        var next = new List<int>(cur) { nums[index] };
+
+                        q.Enqueue(cur);
+                        q.Enqueue(next);
                     }
+                    index++;
                 }
-                return [.. res];
+
+                List<IList<int>> res = [];
+                while (q.Count > 0) res.Add(q.Dequeue());
+                return res;
             }
         }
     }
