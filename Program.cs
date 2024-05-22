@@ -10,7 +10,7 @@ namespace LeetCodeDaily
         static void Main(string[] args)
         {
             var sol = new Solution();
-            string a = "aab";
+            string a = "aabbaabbaa";
             foreach (var list in sol.Partition(a)) Console.WriteLine(String.Join(',', list));
         }
         public class Solution
@@ -18,34 +18,32 @@ namespace LeetCodeDaily
             public IList<IList<string>> Partition(string s)
             {
                 List<IList<string>> res = [];
-                List<string> substrings = [];
-                Backtracking(0, substrings, new StringBuilder());
+                Backtracking(s, res, new List<string>(), 0);
                 return res;
+            }
 
-                void Backtracking (int start, IList<string> substrings, StringBuilder sb)
+            void Backtracking(string s, IList<IList<string>> res, List<string> cur, int start)
+            {
+                if (start >= s.Length) res.Add(new List<string>(cur));
+
+                for (int end  = start; end < s.Length; end++)
                 {
-                    res.Add(new List<string>(substrings));
-                    for (int i = start; i < s.Length; i++)
+                    if (IsPalindrome(s, start, end))
                     {
-                        sb.Append(s[i]);
-                        string sub = sb.ToString();
-                        if (IsPalindrome(sub))
-                        {
-                            substrings.Add(sub);
-                            Backtracking(start + 1, substrings, new StringBuilder());
-                        }
+                        cur.Add(s.Substring(start, end - start + 1));
+                        Backtracking(s,res, cur, end + 1);
+                        cur.RemoveAt(cur.Count - 1);
                     }
                 }
-                bool IsPalindrome(string substring)
+            }
+
+            bool IsPalindrome(string s, int left, int right)
+            {
+                while (left< right)
                 {
-                    int n = substring.Length, l = 0, r = n - 1;
-                    while (l < r)
-                    {
-                        if (substring[l] != substring[r]) return false;
-                        l++; r--;
-                    }
-                    return true;
+                    if (s[left++] != s[right--]) return false;
                 }
+                return true;
             }
         }
     }
