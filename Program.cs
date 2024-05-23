@@ -9,49 +9,38 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            int[] a = [2, 4, 6];
+            Console.WriteLine(sol.BeautifulSubsets(a, 2));
+            int[] b = [1];
+            Console.WriteLine(sol.BeautifulSubsets(b, 1));
+            int[] c = [2, 2, 2, 2, 6, 6, 6, 6];
+            Console.WriteLine(sol.BeautifulSubsets(c, 2));
+            int[] d = [4, 2, 5, 9, 10, 3];
+            Console.WriteLine(sol.BeautifulSubsets(d, 1));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int BeautifulSubsets(int[] nums, int k)
             {
-                return null;
+                List<(int, int)> l = [];
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    for (int n = 0; n < l.Count; n++) 
+                    {
+                        var kvp = l[n];
+                        if (Math.Abs(kvp.Item1 - nums[i]) != k)
+                        {
+                            kvp.Item2 *= 2;
+                            l[n] = kvp;
+                        }
+                    }
+                    l.Add((nums[i], 1));
+                }
+
+                return l.Select(kvp => kvp.Item2).Sum();
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
