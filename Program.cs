@@ -23,23 +23,27 @@ namespace LeetCodeDaily
         {
             public int BeautifulSubsets(int[] nums, int k)
             {
-                List<(int, int)> l = [];
+                Array.Sort(nums);
+                int res = 0;
+                DFS(0, []);
+                return res;
 
-                for (int i = 0; i < nums.Length; i++)
+                void DFS(int i, IList<int> list)
                 {
-                    for (int n = 0; n < l.Count; n++) 
+                    if (i == nums.Length)
                     {
-                        var kvp = l[n];
-                        if (Math.Abs(kvp.Item1 - nums[i]) != k)
-                        {
-                            kvp.Item2 *= 2;
-                            l[n] = kvp;
-                        }
+                        if (list.Count > 0) res++;
+                        return;
                     }
-                    l.Add((nums[i], 1));
-                }
 
-                return l.Select(kvp => kvp.Item2).Sum();
+                    DFS(i + 1, list);
+                    if (list.Count == 0 || (!list.Contains(nums[i] - k) && !list.Contains(nums[i] + k)))
+                    {
+                        list.Add(nums[i]);
+                        DFS(i + 1, list);
+                        list.RemoveAt(list.Count - 1);
+                    }
+                }
             }
         }
     }
