@@ -11,7 +11,7 @@ namespace LeetCodeDaily
         {
             Solution sol = new();
             int[] arr1 = [1, 2, 3, 4, 5, 6, 7];
-            sol.Rotate(arr1, 3);
+            sol.Rotate(arr1, 2);
             int[] arr2 = [-1, -100, 3, 99];
             sol.Rotate(arr2, 2);
         }
@@ -19,16 +19,47 @@ namespace LeetCodeDaily
         {
             public void Rotate(int[] nums, int k)
             {
-                int temp = nums[0];
-                for (int n = 0; n < k; n++)
+                if (k == nums.Length) return;
+
+                if (k % 2 == 0 && nums.Length % 2 == 0)
                 {
-                    for (int i = 1; i < nums.Length; i++)
+                    int next = k;
+                    int temp = nums[0];
+
+                    for (int n = 0; n < nums.Length / 2; n++)
                     {
-                        temp ^= nums[i];
-                        nums[i] ^= temp;
-                        temp ^= nums[i];
+                        if (next > nums.Length - 1) next = next - nums.Length;
+
+                        temp ^= nums[next];
+                        nums[next] ^= temp;
+                        temp ^= nums[next];
+                        next += k;
                     }
-                    nums[0] = temp;
+                    next = k + 1;
+                    temp = nums[1];
+                    for (int n = 0; n < nums.Length / 2; n++)
+                    {
+                        if (next > nums.Length - 1) next = next - nums.Length;
+
+                        temp ^= nums[next];
+                        nums[next] ^= temp;
+                        temp ^= nums[next];
+                        next += k;
+                    }
+                }
+                else
+                {
+                    int next = k;
+                    int temp = nums[0];
+                    for (int n = 0; n < nums.Length; n++)
+                    {
+                        if (next > nums.Length - 1) next = next - nums.Length;
+
+                        temp ^= nums[next];
+                        nums[next] ^= temp;
+                        temp ^= nums[next];
+                        next += k;
+                    }
                 }
             }
         }
