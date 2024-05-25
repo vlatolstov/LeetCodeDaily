@@ -21,9 +21,9 @@ namespace LeetCodeDaily
         {
             public IList<string> WordBreak(string s, IList<string> wordDict)
             {
-                HashSet<string> valid = new HashSet<string>(wordDict);
-                IList<string> result = new List<string>();
-                BFS (0, 1, new List<string>());
+                HashSet<string> valid = new(wordDict);
+                IList<string> result = [];
+                BFS (0, 0, []);
                 return result;
 
                 void BFS(int l, int r, IList<string> sentence)
