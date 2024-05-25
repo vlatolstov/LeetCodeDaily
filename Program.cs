@@ -19,46 +19,23 @@ namespace LeetCodeDaily
         {
             public void Rotate(int[] nums, int k)
             {
-                if (k == nums.Length) return;
+                if (k == 0 || nums.Length == 1 || nums.Length == k)
+                    return;
 
-                if (k % 2 == 0 && nums.Length % 2 == 0)
+                int startIndex = 0;
+                int nextPlace = 0;
+                int element = nums[nextPlace];
+
+                for (int i = 1; i <= nums.Length; i++)
                 {
-                    int next = k;
-                    int temp = nums[0];
+                    nextPlace = (nextPlace + k) % nums.Length;
+                    (element, nums[nextPlace]) = (nums[nextPlace], element);
 
-                    for (int n = 0; n < nums.Length / 2; n++)
+                    if (nextPlace == startIndex)
                     {
-                        if (next > nums.Length - 1) next = next - nums.Length;
-
-                        temp ^= nums[next];
-                        nums[next] ^= temp;
-                        temp ^= nums[next];
-                        next += k;
-                    }
-                    next = k + 1;
-                    temp = nums[1];
-                    for (int n = 0; n < nums.Length / 2; n++)
-                    {
-                        if (next > nums.Length - 1) next = next - nums.Length;
-
-                        temp ^= nums[next];
-                        nums[next] ^= temp;
-                        temp ^= nums[next];
-                        next += k;
-                    }
-                }
-                else
-                {
-                    int next = k;
-                    int temp = nums[0];
-                    for (int n = 0; n < nums.Length; n++)
-                    {
-                        if (next > nums.Length - 1) next = next - nums.Length;
-
-                        temp ^= nums[next];
-                        nums[next] ^= temp;
-                        temp ^= nums[next];
-                        next += k;
+                        startIndex++;
+                        nextPlace++;
+                        element = nums[nextPlace];
                     }
                 }
             }
