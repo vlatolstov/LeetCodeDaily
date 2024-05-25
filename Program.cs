@@ -9,49 +9,28 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            int[] arr1 = [1, 2, 3, 4, 5, 6, 7];
+            sol.Rotate(arr1, 3);
+            int[] arr2 = [-1, -100, 3, 99];
+            sol.Rotate(arr2, 2);
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public void Rotate(int[] nums, int k)
             {
-                return null;
+                int temp = nums[0];
+                for (int n = 0; n < k; n++)
+                {
+                    for (int i = 1; i < nums.Length; i++)
+                    {
+                        temp ^= nums[i];
+                        nums[i] ^= temp;
+                        temp ^= nums[i];
+                    }
+                    nums[0] = temp;
+                }
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
