@@ -9,49 +9,35 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            const int mod = 1000000007;
+            public int CheckRecord(int n)
             {
-                return null;
+                if (n == 1) return 3;
+
+                long[,,] dp = new long[n + 1, 2, 3];
+                dp[0, 0, 0] = 1;
+
+                for (int i = 1; i <= n; i++)
+                    for (int A = 0; A <= 1; A++)
+                        for (int L = 0; L < 3; L++)
+                        {
+                            dp[i, A, 0] = (dp[i, A, 0] + dp[i - 1, A, L]) % mod;
+                            if (A > 0) dp[i, A, 0] = (dp[i, A, 0] + dp[i - 1, A - 1, L]) % mod;
+                            if (L < 2) dp[i, A, L + 1] = (dp[i, A, L + 1] + dp[i - 1, A, L]) % mod;
+                        }
+
+                long res = 0;
+
+                for (int A = 0; A <= 1; A++)
+                    for (int L = 0; L < 3; L++)
+                        res = (res + dp[n, A, L]) % mod;
+
+                return (int)res;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
