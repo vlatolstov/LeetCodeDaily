@@ -9,49 +9,32 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            int[] a = [3, 5];
+            int[] b = [0, 0];
+            int[] c = [0, 4, 3, 0, 4];
+            Console.WriteLine(sol.SpecialArray(a));
+            Console.WriteLine(sol.SpecialArray(b));
+            Console.WriteLine(sol.SpecialArray(c));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int SpecialArray(int[] nums)
             {
-                return null;
+                int[] count = new int[1001];
+
+                for (int i = 0; i < nums.Length; i++) count[nums[i]]++;
+
+                int goe = 0; //greater or equal
+
+                for (int x = count.Length - 1; x >= 0; x--)
+                {
+                    if (x == count[x] + goe) return x;
+                    goe += count[x];
+                }
+
+                return -1;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
