@@ -9,49 +9,32 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            string s1 = "krpgjbjjznpzdfy", t1 = "nxargkbydxmsgby";
+            Console.WriteLine(sol.EqualSubstring(s1, t1, 14));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int EqualSubstring(string s, string t, int maxCost)
             {
-                return null;
+                int res = 0;
+                DFS(0, 0, 0);
+                return res;
+
+                void DFS(int i, int curCost, int length)
+                {
+                    if (i == s.Length) return;
+
+                    int diff = Math.Abs(s[i] - t[i]);
+                    if (curCost + diff <= maxCost)
+                    {
+                        length++;
+                        DFS(i + 1, curCost + diff, length);
+                    }
+                    DFS(i + 1, 0, 0);
+                    res = Math.Max(res, length);
+                }
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
