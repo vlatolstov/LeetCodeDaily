@@ -10,30 +10,34 @@ namespace LeetCodeDaily
         static void Main(string[] args)
         {
             Solution sol = new();
-            string s1 = "krpgjbjjznpzdfy", t1 = "nxargkbydxmsgby";
-            Console.WriteLine(sol.EqualSubstring(s1, t1, 14));
+            string s1 = "abcd", t1 = "bcdf";
+            Console.WriteLine(sol.EqualSubstring(s1, t1, 3));
+            string s2 = "krpgjbjjznpzdfy", t2 = "nxargkbydxmsgby";
+            Console.WriteLine(sol.EqualSubstring(s2, t2, 14));
         }
         public class Solution
         {
             public int EqualSubstring(string s, string t, int maxCost)
             {
-                int res = 0;
-                DFS(0, 0, 0);
-                return res;
+                int[] diff = new int[s.Length];
+                for (int i = 0; i < diff.Length; i++) diff[i] = Math.Abs(s[i] - t[i]);
 
-                void DFS(int i, int curCost, int length)
+                int left = 0, right = 0, score = 0, res = 0;
+
+                while (left < diff.Length)
                 {
-                    if (i == s.Length) return;
-
-                    int diff = Math.Abs(s[i] - t[i]);
-                    if (curCost + diff <= maxCost)
+                    if (left > right) right = left;
+                    if (score < 0) score = 0;
+                    while (right < diff.Length && score + diff[right] <= maxCost)
                     {
-                        length++;
-                        DFS(i + 1, curCost + diff, length);
+                        score += diff[right];
+                        right++;
                     }
-                    DFS(i + 1, 0, 0);
-                    res = Math.Max(res, length);
+                    res = Math.Max(res, right - left);
+                    score -= diff[left];
+                    left++;
                 }
+                return res;
             }
         }
     }
