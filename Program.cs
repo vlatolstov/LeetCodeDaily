@@ -9,49 +9,45 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            string a = "1";
+            Console.WriteLine(sol.NumSteps(a));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int NumSteps(string s)
             {
-                return null;
+                long x = ToDecimal(s);
+                int steps = 0;
+
+                while (x != 1)
+                {
+                    if (x % 2 == 0)
+                    {
+                        x /= 2;
+                    }
+                    else
+                    {
+                        x += 1;
+                    }
+                    steps++;
+                }
+                return steps;
+
+                long ToDecimal(string binary)
+                {
+                    long val = 0;
+                    int length = binary.Length;
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        char bit = binary[length - 1 - i];
+                        if (bit == '1') val += (long)Math.Pow(2, i);
+                    }
+
+                    return val;
+                }
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
