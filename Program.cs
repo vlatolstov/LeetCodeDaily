@@ -2,6 +2,8 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.Xml.Linq;
+using System.Runtime.ExceptionServices;
 
 namespace LeetCodeDaily
 {
@@ -9,49 +11,32 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            int[] a = [2, 3, 1, 6, 7];
+            Console.WriteLine(sol.CountTriplets(a));
+            int[] b = [1, 1, 1, 1, 1];
+            Console.WriteLine(sol.CountTriplets(b));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int CountTriplets(int[] arr)
             {
-                return null;
+                if (arr.Length < 2 || arr == null) return 0;
+
+                int count = 0;
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    int length = 1;
+                    int XOR = arr[i];
+                    for (int k = i + 1; k < arr.Length; k++)
+                    {
+                        length++;
+                        XOR ^= arr[k];
+                        if (XOR == 0) count += length - 1;
+                    }
+                }
+                return count;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
