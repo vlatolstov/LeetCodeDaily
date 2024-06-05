@@ -13,45 +13,37 @@ namespace LeetCodeDaily
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public IList<string> CommonChars(string[] words)
             {
-                return null;
+                Dictionary<char, int> d = [];
+
+                for (int i = 0; i < words[0].Length; i++) if (!d.TryAdd(words[0][i], 1)) d[words[0][i]]++;
+
+                for (int i = 1; i < words.Length; i++)
+                {
+                    var temp = new Dictionary<char, int>();
+
+                    for (int j = 0; j < words[i].Length; j++) if (!temp.TryAdd(words[i][j], 1)) temp[words[i][j]]++;
+
+                    foreach (var key in d.Keys)
+                    {
+                        if (!temp.TryGetValue(key, out int value)) d.Remove(key);
+                        else d[key] = Math.Min(d[key], value);
+                    }
+                }
+
+                List<string> res = [];
+
+                foreach (var kvp in d)
+                {
+                    for (int i = 0; i < kvp.Value; i++)
+                    {
+                        res.Add(kvp.Key.ToString());
+                    }
+                }
+
+                return res;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
