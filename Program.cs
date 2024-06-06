@@ -13,45 +13,31 @@ namespace LeetCodeDaily
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            void BucketSort(int[] arr, int K)
             {
-                return null;
+                List<List<int>> buckets = new();
+                for (int i = 0; i < K; i++) buckets.Add([]);
+                int offset = arr.Min();
+                int max = arr.Max() - offset;
+                double size = (double)(max / K);
+                if (size < 1d) size = 1d;
+
+                foreach (int i in arr)
+                {
+                    int index = (int)((i - offset) / size);
+                    if (index == K) buckets[K - 1].Add(i);
+                    else buckets[index].Add(i);
+                }
+
+                foreach (var bucket in buckets) bucket.Sort();
+
+                List<int> sorted = [];
+                foreach (var bucket in buckets) sorted.AddRange(bucket);
+
+                for (int i = 0; i < arr.Length; i++) arr[i] = sorted[i];
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
         }
+
     }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
-        }
     }
 }
