@@ -13,45 +13,45 @@ namespace LeetCodeDaily
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            private const int NUM_DIGITS = 10;
+            void RadixSort(int[] arr)
             {
-                return null;
+                int max = int.MinValue;
+                foreach (int i in arr) max = Math.Max(max, i);
+
+                int place = 1;
+                while (max / place > 0)
+                {
+                    CountingSort(arr, place);
+                    place *= 10;
+                }
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
+
+            void CountingSort(int[] arr, int place)
+            {
+                var counts = new int[NUM_DIGITS];
+
+                foreach (int i in arr) counts[i / place % NUM_DIGITS]++;
+
+                int startIndex = 0;
+                for (int i = 0; i < counts.Length; i++)
+                {
+                    int count = counts[i];
+                    counts[i] = startIndex;
+                    startIndex += count;
+                }
+
+                var sorted = new int[arr.Length];
+                foreach (int i in arr)
+                {
+                    int cur = i / place;
+                    sorted[counts[cur % NUM_DIGITS]] = i;
+                    counts[cur % NUM_DIGITS]++;
+                }
+
+                for (int i = 0; i < arr.Length; i++) arr[i] = sorted[i];
+            }
+
         }
     }
 }
