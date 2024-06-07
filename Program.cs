@@ -9,49 +9,54 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            IList<string> d1 = ["cat", "bat", "rat"];
+            string s1 = "the cattle was rattled by the battery";
+            Console.WriteLine(sol.ReplaceWords(d1, s1));
+            IList<string> d2 = ["a", "b", "c"];
+            string s2 = "aadsfasf absbs bbab cadsfafs";
+            Console.WriteLine(sol.ReplaceWords(d2, s2));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public string ReplaceWords(IList<string> dictionary, string sentence)
             {
-                return null;
+                Dictionary<char, HashSet<string>> dict = [];
+
+                foreach (string word in dictionary)
+                {
+                    if (!dict.ContainsKey(word[0])) dict.Add(word[0], []);
+                    dict[word[0]].Add(word);
+                }
+
+                string[] words = sentence.Split(' ');
+
+                for (int i = 0; i < words.Length; i++)
+                {
+                    string word = words[i];
+                    int length = int.MaxValue;
+
+                    for (int j = 0; j < word.Length; j++)
+                    {
+                        if (dict.TryGetValue(word[j], out HashSet<string>? value))
+                        {
+                            foreach (string root in value)
+                            {
+                                if (root.Length >= length 
+                                    || root.Length > word.Length - j) continue;
+                                string sub = word.Substring(j, root.Length);
+                                if (sub == root)
+                                {
+                                    length = Math.Min(root.Length, length);
+                                    words[i] = root;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return String.Join(' ', words);
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
