@@ -36,25 +36,21 @@ namespace LeetCodeDaily
                     string word = words[i];
                     int length = int.MaxValue;
 
-                    for (int j = 0; j < word.Length; j++)
+                    if (dict.TryGetValue(word[0], out HashSet<string>? value))
                     {
-                        if (dict.TryGetValue(word[j], out HashSet<string>? value))
+                        foreach (string root in value)
                         {
-                            foreach (string root in value)
+                            if (root.Length >= length
+                                || root.Length > word.Length) continue;
+                            string sub = word[..root.Length];
+                            if (sub == root)
                             {
-                                if (root.Length >= length 
-                                    || root.Length > word.Length - j) continue;
-                                string sub = word.Substring(j, root.Length);
-                                if (sub == root)
-                                {
-                                    length = Math.Min(root.Length, length);
-                                    words[i] = root;
-                                }
+                                length = Math.Min(root.Length, length);
+                                words[i] = root;
                             }
                         }
                     }
                 }
-
                 return String.Join(' ', words);
             }
         }
