@@ -21,21 +21,21 @@ namespace LeetCodeDaily
         {
             public bool CheckSubarraySum(int[] nums, int k)
             {
-                if (nums == null || nums.Length < 2) return false;
-                int l = 0, r = 1, sum = nums[l] + nums[r];
-                bool hasGood = false;
-                BFS(sum, l, r);
-                return hasGood;
-
-                void BFS(int sum, int l, int r)
+                int len = nums.Length;
+                int sum = 0;
+                int prefix = 0;
+                HashSet<int> hset = new HashSet<int>();
+                for (int i = 0; i < len; i++)
                 {
-                    if (sum % k == 0 || sum == 0) hasGood = true;
-                    if (hasGood || r >= nums.Length - 1 || l >= r) return;
-
-                    sum += nums[r + 1];
-                    BFS(sum - nums[l], l + 1, r + 1);
-                    BFS(sum, l, r + 1);
+                    sum += nums[i];
+                    if (k != 0)
+                        sum %= k;
+                    if (hset.Contains(sum))
+                        return true;
+                    hset.Add(prefix);
+                    prefix = sum;
                 }
+                return false;
             }
         }
     }
