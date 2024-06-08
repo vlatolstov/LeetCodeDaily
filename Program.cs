@@ -9,49 +9,41 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            Console.WriteLine(sol.CheckSubarraySum([5,0,0,0], 3));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public bool CheckSubarraySum(int[] nums, int k)
             {
-                return null;
+                if (nums == null || nums.Length < 2) return false;
+
+                Queue<(int, int[])> q = [];
+                int left = 0, right = 1, firstSum = nums[left] + nums[right];
+                q.Enqueue((firstSum, [left, right]));
+
+                while (q.Count > 0)
+                {
+                    int size = q.Count; 
+                    for (int i = 0; i < size; i++)
+                    {
+                        var cur = q.Dequeue();
+                        int curSum = cur.Item1;
+                        int l = cur.Item2[0];
+                        int r = cur.Item2[1];
+
+                        if (curSum % k == 0 || curSum == 0) return true;
+                        if (r < nums.Length - 1)
+                        {
+                            curSum += nums[++r];
+                            q.Enqueue((curSum, [l, r]));
+                        }
+                        if (l < nums.Length - 2) q.Enqueue((curSum - nums[l++], [l, r]));
+                    }
+                }
+
+                return false;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
