@@ -19,19 +19,21 @@ namespace LeetCodeDaily
         {
             public int SubarraysDivByK(int[] nums, int k)
             {
-                Dictionary<int, int> prefixSum = []; //key is modulo of current sum, val is count
-                prefixSum[0] = 1;
-                int count = 0;
-                int sum = 0;
+                int[] mods = new int[k];
+                mods[0] = 1;
 
-                for (int i = 0; i < nums.Length; i++)
+                int prefixSum = 0;
+                int count = 0;
+
+                foreach (int i in nums)
                 {
-                    sum += nums[i];
-                    int mod = sum % k;
+                    prefixSum += i;
+                    int mod = prefixSum % k;
                     if (mod < 0) mod += k;
-                    if (prefixSum.TryGetValue(mod, out int value)) count += value;
-                    if (!prefixSum.TryAdd(mod, 1)) prefixSum[mod]++;
+                    count += mods[mod];
+                    mods[mod]++;
                 }
+
                 return count;
             }
         }
