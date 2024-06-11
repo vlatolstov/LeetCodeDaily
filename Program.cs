@@ -9,49 +9,38 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new Solution();
+            int[] a = [2, 3, 1, 3, 2, 4, 6, 7, 9, 2, 19], b = [2, 1, 4, 3, 9, 6];
+            Console.WriteLine(String.Join(", ", sol.RelativeSortArray(a,b)));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int[] RelativeSortArray(int[] arr1, int[] arr2)
             {
-                return null;
+                int[] res = new int[arr1.Length];
+                List<int> other = [];
+                Dictionary<int, int> hm = arr2.ToDictionary(k => k, k => 0);
+
+                for (int i = 0; i < arr1.Length; i++)
+                {
+                    if (hm.ContainsKey(arr1[i])) hm[arr1[i]]++;
+                    else other.Add(arr1[i]);
+                }
+
+                int index = 0;
+                foreach (var kvp in hm)
+                {
+                    for (int i = 0; i < kvp.Value; i++) res[index++] = kvp.Key;
+                }
+
+                other.Sort();
+                for (int i = 0; i < other.Count; i++)
+                {
+                    res[index++] = other[i];
+                }
+
+                return res;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
