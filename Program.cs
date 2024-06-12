@@ -9,6 +9,7 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
+            Random random = new();
             Solution sol = new();
             int[] a = [2, 0, 2, 1, 1, 0];
             sol.SortColors(a);
@@ -16,6 +17,9 @@ namespace LeetCodeDaily
             int[] b = [2, 0, 1];
             sol.SortColors(b);
             Console.WriteLine(String.Join(", ", b));
+            int[] c = Enumerable.Range(0,300).Select(i => random.Next(3)).ToArray();
+            sol.SortColors(c);
+            Console.WriteLine(String.Join(", ", c));
         }
         public class Solution
         {
@@ -36,6 +40,7 @@ namespace LeetCodeDaily
                         case 2:
                             (nums[r], nums[pos]) = (nums[pos], nums[r]);
                             r--;
+                            pos--;
                             break;
                     }
                     pos++;
