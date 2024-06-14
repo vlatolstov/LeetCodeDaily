@@ -15,6 +15,7 @@ namespace LeetCodeDaily
         {
             public int MinIncrementForUnique(int[] nums)
             {
+                Array.Sort(nums);
                 HashSet<int> h = [];
                 int res = 0;
 
