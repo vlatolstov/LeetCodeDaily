@@ -32,17 +32,27 @@ namespace LeetCodeDaily
             {
                 var zip = profits
                     .Zip(capital)
+                    .OrderBy(z => z.Second)
                     .ToList();
 
-                for (int i = 0; i < k; i++)
+                PriorityQueue<int, int> q = new();
+                int i = 0, n = profits.Length;
+
+                while (k > 0)
                 {
-                    var bestProfit = zip
-                        .Where(z => z.Second <= w)
-                        .OrderByDescending(z => z.First)
-                        .Select((z, index) => (z.First, index))
-                        .First();
-                    w += bestProfit.First;
-                    zip.RemoveAt(bestProfit.index);
+                    while (i < n && zip[i].Second <= w)
+                    {
+                        q.Enqueue(zip[i].First, -zip[i].First);
+                        i++;
+                    }
+
+                    if (q.Count == 0)
+                    {
+                        break;
+                    }
+
+                    w += q.Dequeue();
+                    k--;
                 }
 
                 return w;
