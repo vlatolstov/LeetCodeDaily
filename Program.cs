@@ -9,49 +9,44 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            Console.WriteLine(sol.FindMaximizedCapital(
+                2,
+                0,
+                [1, 2, 3],
+                [0, 1, 1]));
+            Console.WriteLine(sol.FindMaximizedCapital(
+                3,
+                0,
+                [1, 2, 3],
+                [0, 1, 2]));
+            Console.WriteLine(sol.FindMaximizedCapital(
+                6,
+                1,
+                [1, 2, 3, 4, 5, 6],
+                [0, 1, 2, 6, 6, 12]));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int FindMaximizedCapital(int k, int w, int[] profits, int[] capital)
             {
-                return null;
+                var zip = profits
+                    .Zip(capital)
+                    .ToList();
+
+                for (int i = 0; i < k; i++)
+                {
+                    var bestProfit = zip
+                        .Where(z => z.Second <= w)
+                        .OrderByDescending(z => z.First)
+                        .Select((z, index) => (z.First, index))
+                        .First();
+                    w += bestProfit.First;
+                    zip.RemoveAt(bestProfit.index);
+                }
+
+                return w;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
