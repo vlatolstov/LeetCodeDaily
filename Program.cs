@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace LeetCodeDaily
 {
@@ -9,49 +10,36 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution solution = new Solution();
+            Console.WriteLine(solution.MinPatches([1, 3], 6));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int MinPatches(int[] nums, int n)
             {
-                return null;
+                var achieved = 0L;
+                var added = 0;
+
+                foreach (int i in nums)
+                {
+                    while (i > achieved + 1)
+                    {
+                        achieved += achieved + 1;
+                        added++;
+                        if (n < achieved) return added;
+                    }
+                    achieved += i;
+                    if (n < achieved) break;
+                }
+
+                while (n > achieved)
+                {
+                    achieved += achieved + 1;
+                    added++;
+                }
+
+                return added;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
