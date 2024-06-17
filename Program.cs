@@ -16,14 +16,17 @@ namespace LeetCodeDaily
         {
             public bool JudgeSquareSum(int c)
             {
-                int a = 0;
-                while (a * a <= c)
+                var l = 0L;
+                var r = (long)Math.Sqrt(c);
+
+                while (l <= r)
                 {
-                    var bSqr = c - a * a; 
-                    var b = Math.Sqrt(bSqr);
-                    if (b % 1 == 0) return true;
-                    a++;
+                    var sqrSum = l * l + r * r;
+                    if (sqrSum == c) return true;
+                    if (sqrSum > c) --r; 
+                    else --l;
                 }
+
                 return false;
             }
         }
