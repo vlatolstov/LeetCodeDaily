@@ -9,49 +9,33 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+            Solution sol = new();
+            Console.WriteLine(sol.MaxProfitAssignment([68, 35, 52, 47, 86], [67, 17, 1, 81, 3], [92, 10, 85, 84, 82]));
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int MaxProfitAssignment(int[] difficulty, int[] profit, int[] worker)
             {
-                return null;
+                var jobs = difficulty.Zip(profit).OrderByDescending(j => j.Second).ToArray();
+                var minDiff = jobs.Min(j => j.First);
+                int res = 0;
+
+                foreach (var w in worker)
+                {
+                    if (w < minDiff) continue;
+
+                    for (int i = 0; i < jobs.Length; i++)
+                    {
+                        if (w >= jobs[i].First)
+                        {
+                            res += jobs[i].Second;
+                            break;
+                        }
+                    }
+                }
+
+                return res;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
