@@ -16,21 +16,22 @@ namespace LeetCodeDaily
         {
             public int MaxProfitAssignment(int[] difficulty, int[] profit, int[] worker)
             {
-                var jobs = difficulty.Zip(profit).OrderByDescending(j => j.Second).ToArray();
-                var minDiff = jobs.Min(j => j.First);
-                int res = 0;
+                Array.Sort(worker);
+                Array.Sort(difficulty, profit);
 
-                foreach (var w in worker)
+                int i = 0, j = 0, res = 0, max = 0;
+
+                while (j < worker.Length)
                 {
-                    if (w < minDiff) continue;
-
-                    for (int i = 0; i < jobs.Length; i++)
+                    if (i < difficulty.Length && worker[j] >= difficulty[i])
                     {
-                        if (w >= jobs[i].First)
-                        {
-                            res += jobs[i].Second;
-                            break;
-                        }
+                        max = Math.Max(max, profit[i]);
+                        i++;
+                    }
+                    else
+                    {
+                        res += max;
+                        j++;
                     }
                 }
 
