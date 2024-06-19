@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace LeetCodeDaily
 {
@@ -9,49 +10,58 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int MinDays(int[] bloomDay, int m, int k)
             {
-                return null;
+                if (m * k > bloomDay.Length) return -1;
+
+                int start = 0;
+                int end = 0;
+
+                foreach (int day in bloomDay) end = Math.Max(end, day);
+
+                int res = -1;
+
+                while (start <= end)
+                {
+                    int mid = start + (end - start) / 2;
+                    if (NumOfBouquets(bloomDay, mid, k) >= m)
+                    {
+                        res = mid;
+                        end = mid - 1;
+                    }
+                    else start = mid + 1; 
+                }
+
+                return res;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
+
+            private int NumOfBouquets(int[] bloomDay, int day, int k)
+            {
+                int numOfBouquets = 0, flowers = 0;
+
+                foreach (int bloom in bloomDay)
+                {
+                    if (bloom <= day)
+                    {
+                        flowers++;
+                        if (flowers == k)
+                        {
+                            numOfBouquets++;
+                            flowers = 0;
+                        }
+                    }
+                    else
+                    {
+                        flowers = 0;
+                    }
+                }
+
+                return numOfBouquets;
+            }
         }
     }
 }
