@@ -9,49 +9,41 @@ namespace LeetCodeDaily
     {
         static void Main(string[] args)
         {
-            
+
         }
         public class Solution
         {
-
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            public int MaxDistance(int[] position, int m)
             {
-                return null;
+                Array.Sort(position);
+
+                int min = 1, max = position[^1] - position[0];
+
+                while (min <= max)
+                {
+                    int mid = min + (max - min) / 2;
+                    if (PossibleToPlace(mid)) min = mid + 1;
+                    else max = mid - 1;
+                }
+
+                return max;
+
+                bool PossibleToPlace(int maxDistance)
+                {
+                    int placed = 1, lastBall = position[0];
+
+                    foreach (int pos in position)
+                    {
+                        if (pos - lastBall >= maxDistance)
+                        {
+                            placed++;
+                            lastBall = pos;
+                        }
+                        if (placed == m) return true;
+                    }
+                    return false;
+                }
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
         }
     }
 }
