@@ -24,8 +24,9 @@ namespace LeetCodeDaily
         {
             public int NumberOfSubarrays(int[] nums, int k)
             {
-                HashSet<(int, int)> valid = []; //<(int,int)> for left and right indexes
+                int res = 0;
                 Queue<(int, int, int)> q = []; //<(int,int,int)> for left, right indexes and odds count
+                HashSet<(int, int, int)> visited = [];
                 q.Enqueue((0, 0, nums[0] % 2));
 
                 while (q.Count > 0)
@@ -34,18 +35,20 @@ namespace LeetCodeDaily
                     for (int i = 0; i < size; i++)
                     {
                         var cur = q.Dequeue();
+
+                        if (!visited.Add(cur)) continue;
+
                         int l = cur.Item1;
                         int r = cur.Item2;
                         int odds = cur.Item3;
 
-                        if (odds == k) valid.Add((l, r));
+                        if (odds == k) res++;
                         if (l < r) q.Enqueue((l + 1, r, odds - nums[l] % 2));
                         if (r < nums.Length - 1) q.Enqueue((l, r + 1, odds + nums[r + 1] % 2));
                     }
                 }
 
-                return valid.Count;
-
+                return res++;
             }
         }
     }
