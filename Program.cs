@@ -38,11 +38,8 @@ namespace LeetCodeDaily
                         int r = cur.Item2;
                         int odds = cur.Item3;
 
-                        if (odds == k && valid.Add((l, r)))
-                        {
-                            if (l < r) q.Enqueue((l + 1, r, odds - nums[l] % 2));
-                        }
-
+                        if (odds == k) valid.Add((l, r));
+                        if (l < r) q.Enqueue((l + 1, r, odds - nums[l] % 2));
                         if (r < nums.Length - 1) q.Enqueue((l, r + 1, odds + nums[r + 1] % 2));
                     }
                 }
