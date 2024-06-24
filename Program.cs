@@ -17,24 +17,24 @@ namespace LeetCodeDaily
             public int MinKBitFlips(int[] nums, int k)
             {
                 int res = 0;
+                int flipRange = 0;
+                int flipCount = 0;
 
                 for (int i = 0; i < nums.Length; i++)
                 {
-                    if (nums[i] == 0)
+                    int cur = nums[i];
+                    if (flipCount > 0) cur = flipCount % 2 == 0 ? cur : cur ^ 1;
+
+                    if (cur == 0)
                     {
-                        for (int j = i; j < i + k; j++)
-                        {
-                            try
-                            {
-                                nums[j] ^= 1;
-                            }
-                            catch (IndexOutOfRangeException)
-                            {
-                                return -1;
-                            }
-                        }
                         res++;
+                        flipRange += k;
                     }
+
+                    flipRange--;
+                    if (flipRange < 0) flipRange = 0;
+                    flipCount = flipRange == 0 ? 0 : flipRange / k + 1;
+                    if (flipRange > nums.Length - i) return -1;
                 }
                 return res;
             }
