@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace LeetCodeDaily
 {
@@ -18,36 +19,56 @@ namespace LeetCodeDaily
             public int OrangesRotting(int[][] grid)
             {
                 int[][] dir = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-                int curRotten = 2;
+                int rotten = 0;
+                int total = 0;
+                Queue<Orange> oranges = [];
+                int res = 0;
 
-                for (int i = 0; i < 10; i++)
-                {
-                    for (int raw = 0; raw < grid.Length; raw++)
+                for (int raw = 0; raw < grid.Length; raw++)
+                    for (int col = 0; col < grid[raw].Length; col++)
                     {
-                        for (int col = 0; col < grid[raw].Length; col++)
+                        if (grid[raw][col] == 2)
                         {
-                            if (grid[raw][col] == curRotten)
+                            oranges.Enqueue(new Orange(raw, col));
+                            rotten++;
+                        }
+                        if (grid[raw][col] != 0) total++;
+                    }
+
+                while (oranges.Count > 0)
+                {
+                    if (rotten == total) break;
+                    int n = oranges.Count;
+                    for (int i = 0; i < n; i++)
+                    {
+                        Orange cur = oranges.Dequeue();
+                        foreach (var d in dir)
+                        {
+                            int dRaw = cur.raw + d[0];
+                            int dCol = cur.col + d[1];
+
+                            if (dRaw >= 0 && dRaw < grid.Length &&
+                                dCol >= 0 && dCol < grid[0].Length)
                             {
-                                foreach (var d in dir)
+                                if (grid[dRaw][dCol] == 1)
                                 {
-                                    if (raw > 0 && raw < grid.Length - 1 &&
-                                        col > 0 && col < grid[raw].Length - 1 &&
-                                        grid[raw + d[0]][col + d[1]] == 1)
-                                    {
-                                        grid[raw + d[0]][col + d[1]] = curRotten + 1;
-                                    }
+                                    grid[dRaw][dCol] = 2;
+                                    oranges.Enqueue(new Orange(dRaw, dCol));
+                                    rotten++;
                                 }
                             }
                         }
                     }
-                    curRotten++;
+                    res++;
                 }
 
-                for (int raw = 0; raw <= grid.Length; raw++)
-                    for (int col = 0; col <= grid[raw].Length; col++)
-                        if (grid[raw][col] == 1) return -1;
+                return rotten == total ? res : -1;
+            }
 
-                return curRotten + 1;
+            public struct Orange(int raw, int col)
+            {
+                public int raw = raw;
+                public int col = col;
             }
         }
     }
