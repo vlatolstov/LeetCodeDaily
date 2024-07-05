@@ -53,5 +53,21 @@ namespace LeetCodeDaily
             this.val = val;
             this.next = next;
         }
+
+        public static ListNode CreateLinkedList(int[] vals)
+        {
+            if (vals.Length == 0) return null;
+
+            ListNode head = new(vals[0]);
+            ListNode cur = head;
+
+            for (int i = 1; i < vals.Length; i++)
+            {
+                cur.next = new(vals[i]);
+                cur = cur.next;
+            }
+
+            return head;
+        }
     }
 }
