@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LeetCodeDaily.Sorting
+namespace LeetCodeDaily
 {
-    public class Sorting
+    public static class Sorting
     {
         private const int NUM_DIGITS = 10;
         public static void RadixSort(int[] arr)
@@ -21,7 +21,6 @@ namespace LeetCodeDaily.Sorting
                 place *= 10;
             }
         }
-
         private static void CountingSort(int[] arr, int place)
         {
             var counts = new int[NUM_DIGITS];
@@ -46,7 +45,6 @@ namespace LeetCodeDaily.Sorting
 
             for (int i = 0; i < arr.Length; i++) arr[i] = sorted[i];
         }
-
         public static void BucketSort(int[] arr, int K)
         {
             List<List<int>> buckets = [];
@@ -69,6 +67,49 @@ namespace LeetCodeDaily.Sorting
             foreach (var bucket in buckets) sorted.AddRange(bucket);
 
             for (int i = 0; i < arr.Length; i++) arr[i] = sorted[i];
+        }
+
+        public static int[] HeapSort(int[] nums)
+        {
+            for (int i = nums.Length / 2 - 1; i >= 0; i--)
+            {
+                Heapify(nums, nums.Length, i);
+            }
+
+            for (int i = nums.Length - 1; i >= 0; i--)
+            {
+                var temp = nums[i];
+                nums[i] = nums[0];
+                nums[0] = temp;
+                Heapify(nums, i, 0);
+            }
+
+            return nums;
+        }
+
+        private static void Heapify(int[] arr, int heapSize, int index)
+        {
+            var left = 2 * index + 1;
+            var right = 2 * index + 2;
+            int largest = index;
+
+            if (left < heapSize && arr[left] > arr[largest])
+            {
+                largest = left;
+            }
+
+            if (right < heapSize && arr[right] > arr[largest])
+            {
+                largest = right;
+            }
+
+            if (largest != index)
+            {
+                var temp = arr[index];
+                arr[index] = arr[largest];
+                arr[largest] = temp;
+                Heapify(arr, heapSize, largest);
+            }
         }
     }
 }

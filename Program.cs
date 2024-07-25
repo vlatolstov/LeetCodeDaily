@@ -14,7 +14,6 @@ namespace LeetCodeDaily
         public class Solution
         {
 
-
         }
     }
 
