@@ -2,6 +2,7 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 
 namespace LeetCodeDaily
 {
@@ -13,60 +14,52 @@ namespace LeetCodeDaily
         }
         public class Solution
         {
-
-        }
-    }
-
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
+            private const int INF = int.MaxValue;
+            public long MinimumCost(string source, string target, char[] original, char[] changed, int[] cost)
             {
-                return null;
+                int[,] distance = new int[26,26];
+                for (int i = 0; i < 26; i++)
+                {
+                    for (int j = 0; j < 26; j++)
+                    {
+                        if (i == j) distance[i, j] = 0;
+                        else distance[i, j] = INF;
+                    }
+                }
+
+                for (int i = 0; i < original.Length; i++)
+                {
+                    int o = original[i] - 'a';
+                    int c = changed[i] - 'a';
+                    distance[o,c] = Math.Min(distance[o,c], cost[i]);
+                }
+
+                for (int k = 0; k < 26; k++)
+                {
+                    for (int i = 0; i < 26; i++)
+                    {
+                        for (int j = 0; j < 26; j++)
+                        {
+                            if (distance[i, k] < INF && distance[k, j] < INF)
+                            {
+                                distance[i,j] = Math.Min(distance[i,j], distance[i, k] + distance[k,j]);
+                            }
+                        }
+                    }
+                }
+
+                long res = 0;
+                for (int i = 0; i < source.Length; i++)
+                {
+                    int s = source[i] - 'a';
+                    int t = target[i] - 'a';
+                    int minCost = distance[s,t];
+                    if (minCost == INF) return -1;
+                    res += minCost;
+                }
+
+                return res;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
-        }
-
-        public static ListNode CreateLinkedList(int[] vals)
-        {
-            if (vals.Length == 0) return null;
-
-            ListNode head = new(vals[0]);
-            ListNode cur = head;
-
-            for (int i = 1; i < vals.Length; i++)
-            {
-                cur.next = new(vals[i]);
-                cur = cur.next;
-            }
-
-            return head;
         }
     }
 }
