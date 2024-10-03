@@ -3,70 +3,54 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace LeetCodeDaily
-{
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-            
+namespace LeetCodeDaily {
+    internal class Program {
+        static void Main(string[] args) {
+            Graph graph = new(4, [[0, 2, 5], [0, 1, 2], [1, 2, 1], [3, 0, 3]]);
+            Console.WriteLine();
         }
-        public class Solution
-        {
+        public class Graph {
+            public int NodesCount { get; private set; }
+            private Dictionary<int, IList<(int node, int weight)>> _adjacencyGraph;
+            private PriorityQueue<int, int> _pq;
 
-        }
-    }
+            public Graph(int n, int[][] edges) {
+                NodesCount = n;
+                _pq = new PriorityQueue<int, int>();
+                _adjacencyGraph = [];
+                for (int i = 0; i < n; i++) {
+                    _adjacencyGraph.Add(i, []);
+                }
 
-
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
-            {
-                return null;
-            }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
-        }
-
-        public static ListNode CreateLinkedList(int[] vals)
-        {
-            if (vals.Length == 0) return null;
-
-            ListNode head = new(vals[0]);
-            ListNode cur = head;
-
-            for (int i = 1; i < vals.Length; i++)
-            {
-                cur.next = new(vals[i]);
-                cur = cur.next;
+                foreach (var edge in edges) {
+                    AddEdge(edge);
+                }
             }
 
-            return head;
+            public void AddEdge(int[] edge) => _adjacencyGraph[edge[0]].Add((edge[1], edge[2]));
+
+
+            public int ShortestPath(int node1, int node2) {
+                HashSet<int> visited = [];
+                int[] distances = Enumerable.Repeat(int.MaxValue, NodesCount).ToArray();
+                distances[node1] = 0;
+                _pq.Enqueue(node1, 0);
+
+                while (_pq.Count > 0) {
+                    var cur = _pq.Dequeue();
+                    if (visited.Contains(cur)) continue;
+                    visited.Add(cur);
+
+                    foreach ((int neighbor, int weight) in _adjacencyGraph[cur]) {
+                        int distance = distances[cur] + weight;
+                        _pq.Enqueue(neighbor, distance);
+                        distances[neighbor] = Math.Min(distances[neighbor], distance);
+                    }
+                }
+
+                _pq.Clear();
+                return distances[node2] == int.MaxValue ? -1 : distances[node2];
+            }
         }
     }
 }
