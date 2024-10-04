@@ -3,70 +3,50 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace LeetCodeDaily
-{
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-            
+namespace LeetCodeDaily {
+    internal class Program {
+        static void Main(string[] args) {
+            Solution sol = new();
+            Console.WriteLine(sol.DividePlayers([3, 2, 5, 1, 3, 4]));
+            Console.WriteLine(sol.DividePlayers([3, 4]));
+            Console.WriteLine(sol.DividePlayers([1, 1, 2, 3]));
         }
-        public class Solution
-        {
+        public class Solution {
+            public long DividePlayers(int[] skill) {
+                int totalSkillSum = 0;
+                int teamsCount = skill.Length / 2;
 
-        }
-    }
+                foreach (int s in skill)
+                    totalSkillSum += s;
 
+                if (totalSkillSum % teamsCount != 0)
+                    return -1;
 
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
+                int teamSkill = totalSkillSum / teamsCount;
+                Dictionary<int, int> counts = [];
+                long chemistry = 0;
 
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
-            {
-                return null;
+                foreach (int a in skill) {
+                    int b = teamSkill - a;
+
+                    if (counts.TryGetValue(b, out int count)) {
+                        if (count == 1) {
+                            counts.Remove(b);
+                        }
+                        else {
+                            counts[b]--;
+                        }
+                        chemistry += a * b;
+                    }
+                    else {
+                        if (!counts.TryAdd(a, 1)) {
+                            counts[a]++;
+                        }
+                    }
+                }
+
+                return counts.Count == 0 ? chemistry : -1;
             }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
-        }
-
-        public static ListNode CreateLinkedList(int[] vals)
-        {
-            if (vals.Length == 0) return null;
-
-            ListNode head = new(vals[0]);
-            ListNode cur = head;
-
-            for (int i = 1; i < vals.Length; i++)
-            {
-                cur.next = new(vals[i]);
-                cur = cur.next;
-            }
-
-            return head;
         }
     }
 }
