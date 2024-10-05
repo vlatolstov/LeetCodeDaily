@@ -3,70 +3,46 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace LeetCodeDaily
-{
-    internal class Program
-    {
-        static void Main(string[] args)
-        {
-            
-        }
-        public class Solution
-        {
+namespace LeetCodeDaily {
+    internal class Program {
+        static void Main(string[] args) {
 
         }
-    }
+        public class Solution {
+            public bool CheckInclusion(string s1, string s2) {
 
+                if (s1.Length > s2.Length) {
+                    return false;
+                }
 
-    public class TreeNode
-    {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
-        {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
+                int[] counts = new int[26];
 
-        public static TreeNode CreateTree(int?[] values, int index = 0)
-        {
-            if (index >= values.Length || values[index] == null)
-            {
-                return null;
-            }
-            TreeNode node = new TreeNode();
-            node.left = CreateTree(values, 2 * index + 1);
-            node.right = CreateTree(values, 2 * index + 2);
-            node.val = (int)values[index];
-            return node;
-        }
-    }
-    public class ListNode
-    {
-        public int val;
-        public ListNode next;
-        public ListNode(int val = 0, ListNode next = null)
-        {
-            this.val = val;
-            this.next = next;
-        }
+                for (int i = 0; i < s1.Length; i++) {
+                    counts[s1[i] - 'a']++;
+                    counts[s2[i] - 'a']--;
+                }
 
-        public static ListNode CreateLinkedList(int[] vals)
-        {
-            if (vals.Length == 0) return null;
+                if (IsValid(counts))
+                    return true;
 
-            ListNode head = new(vals[0]);
-            ListNode cur = head;
+                for (int i = s1.Length; i < s2.Length; i++) {
+                    counts[s2[i] - 'a']--;
+                    counts[s2[i - s1.Length] - 'a']++;
 
-            for (int i = 1; i < vals.Length; i++)
-            {
-                cur.next = new(vals[i]);
-                cur = cur.next;
+                    if (IsValid(counts))
+                        return true;
+                }
+
+                return false;
             }
 
-            return head;
+            private bool IsValid(int[] counts) {
+                foreach (int i in counts) {
+                    if (i != 0)
+                        return false;
+                }
+                return true;
+            }
         }
     }
 }
