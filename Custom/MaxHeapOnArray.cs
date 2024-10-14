@@ -18,11 +18,11 @@ namespace LeetCodeDaily.Custom {
 
         public int Peek() => _maxHeap[1];
 
-        public void Push(int value) {
+        public bool Push(int value) {
             Count++;
             if (Count > _heapSize) {
                 Count--;
-                throw new Exception("Heap is full");
+                return false;
             }
 
             _maxHeap[Count] = value;
@@ -34,6 +34,22 @@ namespace LeetCodeDaily.Custom {
                 index = parent;
                 parent = index / 2;
             }
+
+            return true;
+        }
+
+        public bool Push(int[] values) {
+            if (Count + values.Length > _heapSize) {
+                return false;
+            }
+
+            foreach (int value in values) {
+                if (!Push(value)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public int Pop() {
