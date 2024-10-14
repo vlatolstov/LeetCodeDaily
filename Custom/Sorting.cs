@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LeetCodeDaily
+namespace LeetCodeDaily.Custom
 {
     public static class Sorting
     {
@@ -68,7 +68,6 @@ namespace LeetCodeDaily
 
             for (int i = 0; i < arr.Length; i++) arr[i] = sorted[i];
         }
-
         public static int[] HeapSort(int[] nums)
         {
             for (int i = nums.Length / 2 - 1; i >= 0; i--)
@@ -86,7 +85,6 @@ namespace LeetCodeDaily
 
             return nums;
         }
-
         private static void Heapify(int[] arr, int heapSize, int index)
         {
             var left = 2 * index + 1;
