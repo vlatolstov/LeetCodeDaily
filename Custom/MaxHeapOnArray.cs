@@ -61,7 +61,7 @@ namespace LeetCodeDaily.Custom {
             _maxHeap[1] = _maxHeap[Count];
             Count--;
             int index = 1;
-            while (index <= Count) {
+            while (index <= Count / 2) {
                 int left = index * 2;
                 int right = index * 2 + 1;
 
