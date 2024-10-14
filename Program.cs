@@ -10,6 +10,7 @@ namespace LeetCodeDaily {
         static void Main(string[] args) {
             Solution sol = new();
             Console.WriteLine(sol.MaxKelements([10, 10, 10, 10, 10], 5));
+            Console.WriteLine(sol.MaxKelements([1, 10, 3, 3, 3], 3));
         }
         public class Solution {
             public long MaxKelements(int[] nums, int k) {
@@ -21,7 +22,7 @@ namespace LeetCodeDaily {
                 while (k > 0) {
                     int max = heap.Pop();
                     score += max;
-                    max = (int)Math.Ceiling((decimal)(max / 3));
+                    max = (int)Math.Ceiling((decimal)max / 3);
                     heap.Push(max);
                     k--;
                 }
