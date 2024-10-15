@@ -11,7 +11,22 @@ namespace LeetCodeDaily {
 
         }
         public class Solution {
+            public long MinimumSteps(string s) {
+                long steps = 0;
+                int whiteCount = 0;
+                char white = '0';
 
+                for (int i = s.Length - 1; i >= 0; i--) {
+                    if (s[i] == white) {
+                        whiteCount++;
+                    }
+                    else {
+                        steps += whiteCount;
+                    }
+                }
+
+                return steps;
+            }
         }
     }
 }
