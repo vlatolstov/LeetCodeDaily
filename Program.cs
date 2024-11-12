@@ -10,46 +10,72 @@ namespace LeetCodeDaily {
         static void Main(string[] args) {
             Solution sol = new();
             Console.WriteLine(string.Join(", ", sol.MaximumBeauty([[1, 2], [3, 2], [2, 4], [5, 6], [3, 5]], [1, 2, 3, 4, 5, 6])));
+            Console.WriteLine(string.Join(", ", sol.MaximumBeauty([[10, 1000]], [5])));
         }
         public class Solution {
             public int[] MaximumBeauty(int[][] items, int[] queries) {
 
-                int n = 0;
-                foreach (var item in items) {
-                    n = Math.Max(n, item[0]);
-                }
+                var ordered = items
+                    .GroupBy(item => item[0])
+                    .Select(item => new int[] { item.Key, item.Max(x => x[1]) })
+                    .OrderBy(item => item[0])
+                    .ToArray();
 
-                int[] bestBeautyForPrice = new int[n + 1];
+                int best = ordered[0][1];
 
-                foreach (var item in items) {
-                    int price = item[0];
-                    int beauty = item[1];
-                    bestBeautyForPrice[price] = beauty;
-                }
-
-                int bestPrice = bestBeautyForPrice[0];
-
-                for (int i = 1; i < bestBeautyForPrice.Length; i++) {
-                    if (bestBeautyForPrice[i] < bestPrice) {
-                        bestBeautyForPrice[i] = bestPrice;
+                for (int i = 1; i < ordered.Length; i++) {
+                    if (ordered[i][1] > best) {
+                        best = ordered[i][1];
                     }
                     else {
-                        bestPrice = bestBeautyForPrice[i];
+                        ordered[i][1] = best;
                     }
                 }
 
                 int[] answer = new int[queries.Length];
 
-                for (int q = 0; q < queries.Length; q++) {
-                    if (queries[q] > n) {
-                        answer[q] = bestBeautyForPrice[n];
-                    }
-                    else {
-                        answer[q] = bestBeautyForPrice[queries[q]];
-                    }
+                for (int i = 0; i < queries.Length; i++) {
+                    answer[i] = BinarySearch(0, ordered.Length - 1, queries[i]);
                 }
 
                 return answer;
+
+
+
+                int BinarySearch(int left, int right, int price) {
+
+                    if (left <= right) {
+
+                        int mid = (left + right) / 2;
+
+                        if (ordered[mid][0] == price) {
+                            return ordered[mid][1];
+                        }
+
+                        if (mid == 0 &&  ordered[mid][0] > price) {
+                            return 0;
+                        }
+
+                        if (ordered[mid][0] > price && ordered[mid - 1][0] < price) {
+                            return ordered[mid - 1][1];
+                        }
+
+                        if (mid == ordered.Length - 1) {
+                            return ordered[mid][1];
+                        }
+
+                        if (ordered[mid][0] > price) {
+                            return BinarySearch(left, mid - 1, price);
+                        }
+                        else {
+                            return BinarySearch(mid + 1, right, price);
+                        }
+                    }
+                    else {
+                        return 0;
+                    }
+
+                }
             }
         }
     }
